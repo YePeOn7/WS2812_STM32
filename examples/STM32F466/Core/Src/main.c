@@ -18,12 +18,13 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dma.h"
 #include "tim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "stdint.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -54,13 +55,14 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+#define PUSH_BUTTON	HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin)
 /* USER CODE END 0 */
 
 /**
   * @brief  The application entry point.
   * @retval int
   */
+int check;
 int main(void)
 {
   /* USER CODE BEGIN 1 */
@@ -85,6 +87,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
 
@@ -92,12 +95,16 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  uint16_t pwmData[] = {10,10,10,10,10, 50,50,50,50,50,90,90,90,90,90};
+  HAL_TIM_PWM_Start_DMA(&htim4, TIM_CHANNEL_2,(uint32_t *)pwmData, 15);
+
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin));
+	  check = htim4.Init.Period;
+	  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, PUSH_BUTTON);
   }
   /* USER CODE END 3 */
 }
@@ -157,7 +164,13 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+//void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
+//{
+//	if(htim == &htim4)
+//	{
+//		HAL_TIM_PWM_Stop_DMA(&htim4, TIM_CHANNEL_2);
+//	}
+//}
 /* USER CODE END 4 */
 
 /**
