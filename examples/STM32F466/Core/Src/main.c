@@ -25,6 +25,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdint.h"
+#include "LED_W2812.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -95,15 +96,16 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  uint16_t pwmData[] = {10,10,10,10,10, 50,50,50,50,50,90,90,90,90,90};
-  HAL_TIM_PWM_Start_DMA(&htim4, TIM_CHANNEL_2,(uint32_t *)pwmData, 15);
-
+  LED_init(&htim4, TIM_CHANNEL_2, 2);
+  LED_setColor(0, 15, 0, 255, 0);
+  LED_setColor(1, 15, 0, 255, 0);
+  LED_setMode(LED_MODE_STATIC);
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  check = htim4.Init.Period;
+	  LED_loop();
 	  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, PUSH_BUTTON);
   }
   /* USER CODE END 3 */

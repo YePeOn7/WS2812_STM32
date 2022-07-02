@@ -16,13 +16,22 @@ enum
 	LED_MODE_OFF,
 	LED_MODE_STATIC,
 	LED_MODE_BREATHING,
-	LED_MODE_RAINBOW
+	LED_MODE_RAINBOW,
+	LED_MODE_BLINKING
 };
 
-void LED_init(TIM_HandleTypeDef* htim, int numberOfLed);
+extern uint16_t LED_numberOfData;
+//extern uint16_t LED_pwmData[53];
+//extern uint8_t LED_data[1][3];				//use for saving user input
+//extern uint8_t LED_processOutput[1][3];
+extern uint16_t* LED_pwmData;
+extern uint8_t** LED_data;				//use for saving user input
+extern uint8_t** LED_processOutput;	//use for saving processed data
+
+void LED_init(TIM_HandleTypeDef* htim, uint32_t pwmChannel, int numberOfLed);
 void LED_setColor(int index, uint8_t brightness, uint8_t R, uint8_t G, uint8_t B);
 void LED_setMode(uint8_t LED_MODE);
-void LED_setFrequency();
+void LED_setPeriode(int periode);
 
 void LED_process();
 void LED_loop();
