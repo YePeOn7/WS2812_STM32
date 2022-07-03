@@ -63,6 +63,14 @@ void LED_setColor(int index, uint8_t brightness, uint8_t R, uint8_t G, uint8_t B
 	LED_data[index][2] = B;
 }
 
+void LED_setColorAll(uint8_t brightness, uint8_t R, uint8_t G, uint8_t B)
+{
+	for(int i=0; i < LED_numberOfLed; i++)
+	{
+		LED_setColor(i, brightness, R, G, B);
+	}
+}
+
 void LED_setMode(uint8_t LED_MODE)
 {
 	LED_mode = LED_MODE;

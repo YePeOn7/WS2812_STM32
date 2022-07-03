@@ -35,6 +35,7 @@ extern int blinkingState;
 
 void LED_init(TIM_HandleTypeDef* htim, uint32_t pwmChannel, int numberOfLed);
 void LED_setColor(int index, uint8_t brightness, uint8_t R, uint8_t G, uint8_t B);
+void LED_setColorAll(uint8_t brightness, uint8_t R, uint8_t G, uint8_t B);
 void LED_setMode(uint8_t LED_MODE);
 void LED_setPeriode(int periode);
 

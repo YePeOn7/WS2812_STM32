@@ -98,10 +98,7 @@ int main(void)
 	/* USER CODE BEGIN WHILE */
 	LED_init(&htim4, TIM_CHANNEL_2, LED_NUMBER);
 	LED_setPeriode(10);
-	for(int i=0; i < LED_NUMBER; i++)
-	{
-		LED_setColor(i, 255, 255, 0, 0);
-	}
+	LED_setColorAll(255, 255, 0, 0);
 
 	while (1)
 	{
