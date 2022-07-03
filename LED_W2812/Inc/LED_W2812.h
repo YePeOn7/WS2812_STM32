@@ -23,12 +23,12 @@ enum
 };
 
 extern uint16_t LED_numberOfData;
-extern uint16_t LED_pwmData[66];
-extern uint8_t LED_data[1][3];				//use for saving user input
-extern uint8_t LED_processOutput[1][3];
-//extern uint16_t* LED_pwmData;
-//extern uint8_t** LED_data;				//use for saving user input
-//extern uint8_t** LED_processOutput;	//use for saving processed data
+//extern uint16_t LED_pwmData[66];
+//extern uint8_t LED_data[1][3];				//use for saving user input
+//extern uint8_t LED_processOutput[1][3];
+extern uint16_t* LED_pwmData;
+extern uint8_t** LED_data;				//use for saving user input
+extern uint8_t** LED_processOutput;	//use for saving processed data
 
 extern uint32_t delTime;
 extern int blinkingState;

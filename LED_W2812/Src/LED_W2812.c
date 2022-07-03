@@ -16,12 +16,12 @@ uint8_t LED_modePrevious;
 uint32_t LED_modeStartTime;
 
 uint16_t LED_numberOfData;
-uint16_t LED_pwmData[66];
-uint8_t LED_data[1][3];				//use for saving user input
-uint8_t LED_processOutput[1][3];
-//uint16_t* LED_pwmData;
-//uint8_t** LED_data;				//use for saving user input
-//uint8_t** LED_processOutput;	//use for saving processed data
+//uint16_t LED_pwmData[66];
+//uint8_t LED_data[1][3];				//use for saving user input
+//uint8_t LED_processOutput[1][3];
+uint16_t* LED_pwmData;
+uint8_t** LED_data;				//use for saving user input
+uint8_t** LED_processOutput;	//use for saving processed data
 
 uint32_t delTime;
 
@@ -31,18 +31,18 @@ void LED_init(TIM_HandleTypeDef* htim, uint32_t pwmChannel, int numberOfLed)
 	LED_numberOfLed = numberOfLed;
 	LED_numberOfData = numberOfLed * 24 + 42;
 
-//	LED_pwmData = (uint16_t*) malloc(LED_numberOfData * sizeof(uint16_t));
+	LED_pwmData = (uint16_t*) malloc(LED_numberOfData * sizeof(uint16_t));
 	for(int i = 0; i < LED_numberOfData; i++)
 	{
 		LED_pwmData[i] = 0;
 	}
 
-//	LED_data = (uint8_t**) malloc(numberOfLed * sizeof(uint8_t*));
-//	LED_processOutput = (uint8_t**) malloc(numberOfLed * sizeof(uint8_t*));
+	LED_data = (uint8_t**) malloc(numberOfLed * sizeof(uint8_t*));
+	LED_processOutput = (uint8_t**) malloc(numberOfLed * sizeof(uint8_t*));
 	for(int i = 0; i < numberOfLed; i++)
 	{
-//		LED_data[i] = malloc(3 * sizeof(uint8_t));
-//		LED_processOutput[i] = malloc(3 * sizeof(uint8_t));
+		LED_data[i] = malloc(3 * sizeof(uint8_t));
+		LED_processOutput[i] = malloc(3 * sizeof(uint8_t));
         for(int j =0; j<3; j++)
         {
             LED_data[i][j] = 0;

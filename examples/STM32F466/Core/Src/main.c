@@ -39,7 +39,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+#define LED_NUMBER 24
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -96,10 +96,13 @@ int main(void)
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
-	LED_init(&htim4, TIM_CHANNEL_2, 1);
+	LED_init(&htim4, TIM_CHANNEL_2, LED_NUMBER);
 	LED_setPeriode(10);
-	LED_setColor(0, 255, 0, 255, 0);
-//  LED_setColor(1, 15, 0, 255, 0);
+	for(int i=0; i < LED_NUMBER; i++)
+	{
+		LED_setColor(i, 255, 255, 0, 0);
+	}
+
 	while (1)
 	{
 		/* USER CODE END WHILE */
