@@ -16,12 +16,14 @@ uint8_t LED_modePrevious;
 uint32_t LED_modeStartTime;
 
 uint16_t LED_numberOfData;
-//uint16_t LED_pwmData[53];
-//uint8_t LED_data[1][3];				//use for saving user input
-//uint8_t LED_processOutput[1][3];
-uint16_t* LED_pwmData;
-uint8_t** LED_data;				//use for saving user input
-uint8_t** LED_processOutput;	//use for saving processed data
+uint16_t LED_pwmData[66];
+uint8_t LED_data[1][3];				//use for saving user input
+uint8_t LED_processOutput[1][3];
+//uint16_t* LED_pwmData;
+//uint8_t** LED_data;				//use for saving user input
+//uint8_t** LED_processOutput;	//use for saving processed data
+
+uint32_t delTime;
 
 void LED_init(TIM_HandleTypeDef* htim, uint32_t pwmChannel, int numberOfLed)
 {
@@ -29,18 +31,18 @@ void LED_init(TIM_HandleTypeDef* htim, uint32_t pwmChannel, int numberOfLed)
 	LED_numberOfLed = numberOfLed;
 	LED_numberOfData = numberOfLed * 24 + 42;
 
-	LED_pwmData = (uint16_t*) malloc(LED_numberOfData * sizeof(uint16_t));
+//	LED_pwmData = (uint16_t*) malloc(LED_numberOfData * sizeof(uint16_t));
 	for(int i = 0; i < LED_numberOfData; i++)
 	{
 		LED_pwmData[i] = 0;
 	}
 
-	LED_data = (uint8_t**) malloc(numberOfLed * sizeof(uint8_t*));
-	LED_processOutput = (uint8_t**) malloc(numberOfLed * sizeof(uint8_t*));
+//	LED_data = (uint8_t**) malloc(numberOfLed * sizeof(uint8_t*));
+//	LED_processOutput = (uint8_t**) malloc(numberOfLed * sizeof(uint8_t*));
 	for(int i = 0; i < numberOfLed; i++)
 	{
-		LED_data[i] = malloc(3 * sizeof(uint8_t));
-		LED_processOutput[i] = malloc(3 * sizeof(uint8_t));
+//		LED_data[i] = malloc(3 * sizeof(uint8_t));
+//		LED_processOutput[i] = malloc(3 * sizeof(uint8_t));
         for(int j =0; j<3; j++)
         {
             LED_data[i][j] = 0;
@@ -49,6 +51,8 @@ void LED_init(TIM_HandleTypeDef* htim, uint32_t pwmChannel, int numberOfLed)
 	}
 
 	HAL_TIM_PWM_Start_DMA(LED_htim, pwmChannel, (uint32_t*)LED_pwmData, LED_numberOfData);
+
+	LED_modeStartTime = getTick();
 }
 
 void LED_setColor(int index, uint8_t brightness, uint8_t R, uint8_t G, uint8_t B)
@@ -73,11 +77,10 @@ void LED_setPeriode(int periode)
 {
 	LED_periode = periode;
 }
-
+int blinkingState;
 void LED_process()
 {
-	int blinkingState;
-	uint32_t t;
+	float t;
 	switch(LED_mode)
 	{
 		case LED_MODE_OFF:
@@ -91,7 +94,7 @@ void LED_process()
 			break;
 
 		case LED_MODE_STATIC:
-			for(int i =0; i < LED_numberOfLed; i++)
+			for(int i = 0; i < LED_numberOfLed; i++)
 			{
 				for(int j = 0; j < 3; j++)
 				{
@@ -101,23 +104,24 @@ void LED_process()
 			break;
 
 		case LED_MODE_BLINKING:
-
-
-			if((getTick() - LED_modeStartTime) > LED_periode * 1000 / 2) blinkingState = 0;
+			delTime = (getTick() - LED_modeStartTime)%(LED_periode*1000);
+			if(delTime > LED_periode * 1000 / 2) blinkingState = 0;
 			else blinkingState = 1;
 
-			for(int i =0; i < LED_numberOfLed; i++)
+			for(int i = 0; i < LED_numberOfLed; i++)
 			{
 				for(int j = 0; j < 3; j++)
 				{
-					LED_processOutput[i][j] = LED_data[i][j] * blinkingState;
+//					LED_processOutput[i][j] = LED_data[i][j] * LED_brigtness / 255;
+					LED_processOutput[i][j] = LED_data[i][j] * LED_brigtness / 255 * blinkingState;
 				}
 			}
+//
 			break;
 
 		case LED_MODE_BREATHING:
-			t = getTick() - LED_modeStartTime;
-			for(int i =0; i < LED_numberOfLed; i++)
+			t = (float)(getTick() - LED_modeStartTime)/1000;
+			for(int i = 0; i < LED_numberOfLed; i++)
 			{
 				for(int j = 0; j < 3; j++)
 				{
@@ -127,13 +131,13 @@ void LED_process()
 			break;
 
 		case LED_MODE_RAINBOW:
-			t = getTick() - LED_modeStartTime;
-			for(int i =0; i < LED_numberOfLed; i++)
+			t = (float)(getTick() - LED_modeStartTime)/1000;
+			for(int i = 0; i < LED_numberOfLed; i++)
 			{
 
-				LED_processOutput[i][0] = LED_brigtness * (1 + sinf(2 * PI * t / LED_periode)) / 2;
-				LED_processOutput[i][1] = LED_brigtness * (1 + sinf(2 * PI * t / LED_periode) + PI * 2 / 3) / 2;
-				LED_processOutput[i][2] = LED_brigtness * (1 + sinf(2 * PI * t / LED_periode) - PI * 2 / 3) / 2;
+				LED_processOutput[i][0] = (float)LED_brigtness * (1 + sinf(2 * PI * t / LED_periode)) / 2;
+				LED_processOutput[i][1] = (float)LED_brigtness * (1 + sinf(2 * PI * t / LED_periode + PI * 2 / 3)) / 2;
+				LED_processOutput[i][2] = (float)LED_brigtness * (1 + sinf(2 * PI * t / LED_periode- PI * 2 / 3)) / 2;
 			}
 			break;
 	}
