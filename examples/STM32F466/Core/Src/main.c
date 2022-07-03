@@ -100,7 +100,6 @@ int main(void)
 	LED_setPeriode(10);
 	LED_setColor(0, 255, 0, 255, 0);
 //  LED_setColor(1, 15, 0, 255, 0);
-	LED_setMode(LED_MODE_RAINBOW);
 	while (1)
 	{
 		/* USER CODE END WHILE */
@@ -112,7 +111,7 @@ int main(void)
 		if (!PUSH_BUTTON)
 		{
 			while (!PUSH_BUTTON) HAL_Delay(10);
-			MODE = (MODE + 1) % 5;
+			MODE = (MODE + 1) % 6;
 		}
 
 		switch (MODE)
@@ -121,7 +120,8 @@ int main(void)
 			case 1: LED_setMode(LED_MODE_STATIC); break;
 			case 2: LED_setMode(LED_MODE_BLINKING); break;
 			case 3: LED_setMode(LED_MODE_BREATHING); break;
-			case 4: LED_setMode(LED_MODE_RAINBOW); break;
+			case 4: LED_setMode(LED_MODE_RAINBOW1); break;
+			case 5: LED_setMode(LED_MODE_RAINBOW1); break;
 		}
 	}
 	/* USER CODE END 3 */

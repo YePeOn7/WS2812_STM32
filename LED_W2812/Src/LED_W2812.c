@@ -130,7 +130,7 @@ void LED_process()
 			}
 			break;
 
-		case LED_MODE_RAINBOW:
+		case LED_MODE_RAINBOW1:
 			t = (float)(getTick() - LED_modeStartTime)/1000;
 			for(int i = 0; i < LED_numberOfLed; i++)
 			{
@@ -138,6 +138,16 @@ void LED_process()
 				LED_processOutput[i][0] = (float)LED_brigtness * (1 + sinf(2 * PI * t / LED_periode)) / 2;
 				LED_processOutput[i][1] = (float)LED_brigtness * (1 + sinf(2 * PI * t / LED_periode + PI * 2 / 3)) / 2;
 				LED_processOutput[i][2] = (float)LED_brigtness * (1 + sinf(2 * PI * t / LED_periode- PI * 2 / 3)) / 2;
+			}
+			break;
+		case LED_MODE_RAINBOW2:
+			t = (float)(getTick() - LED_modeStartTime)/1000;
+			for(int i = 0; i < LED_numberOfLed; i++)
+			{
+				int shift = 2 * PI * i / LED_numberOfLed;
+				LED_processOutput[i][0] = (float)LED_brigtness * (1 + sinf(2 * PI * t / LED_periode) + shift) / 2;
+				LED_processOutput[i][1] = (float)LED_brigtness * (1 + sinf(2 * PI * t / LED_periode + PI * 2 / 3 + shift)) / 2;
+				LED_processOutput[i][2] = (float)LED_brigtness * (1 + sinf(2 * PI * t / LED_periode- PI * 2 / 3 + shift)) / 2;
 			}
 			break;
 	}
